@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Customer Cowork Estimator | Partner Download</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Copilot Cowork Estimator</title>
   <script>
     (() => {
       const param = new URLSearchParams(window.location.search).get("scoutTheme");
@@ -65,278 +65,176 @@
       --cp-sheen: rgba(255, 255, 255, 0.04);
       --cp-highlight: rgba(253, 142, 161, 0.12);
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--cp-bg);
-      color: var(--cp-text);
-      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    a {
-      color: var(--cp-link);
-    }
-
-    .shell {
-      min-height: 100vh;
-      padding: 32px;
-      display: grid;
-      place-items: center;
-    }
-
-    .app {
-      width: min(1120px, 100%);
-      display: grid;
-      gap: 24px;
-    }
-
-    .hero,
-    .card {
-      background: var(--cp-surface);
-      border: 1px solid var(--cp-border);
-      border-radius: 16px;
-      box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
-    }
-
-    .hero {
-      padding: 36px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
-      gap: 32px;
-      align-items: center;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-      padding: 6px 10px;
-      border-radius: 0.625rem;
-      background: var(--cp-accent-soft);
-      color: var(--cp-accent);
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 0.625rem;
-      background: var(--cp-accent);
-    }
-
-    h1 {
-      margin: 0;
-      max-width: 760px;
-      font-size: clamp(2.4rem, 6vw, 5rem);
-      line-height: 0.95;
-      letter-spacing: -0.06em;
-    }
-
-    .lead {
-      max-width: 700px;
-      margin: 20px 0 0;
-      color: var(--cp-text-muted);
-      font-size: 1.16rem;
-      line-height: 1.55;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 28px;
-    }
-
-    .button {
-      display: inline-flex;
-      min-height: 44px;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      border-radius: 0.625rem;
-      border: 1px solid var(--cp-border);
-      padding: 10px 16px;
-      color: var(--cp-text);
-      background: var(--cp-surface);
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    .button.primary {
-      border-color: var(--cp-accent);
-      background: var(--cp-accent);
-      color: var(--cp-accent-fg);
-    }
-
-    .button.primary:hover {
-      background: var(--cp-accent-hover);
-      border-color: var(--cp-accent-hover);
-    }
-
-    .button:focus-visible {
-      outline: 3px solid var(--cp-highlight);
-      outline-offset: 2px;
-    }
-
-    .download-card {
-      padding: 24px;
-      background: var(--cp-bg-elevated);
-      border: 1px solid var(--cp-border);
-      border-radius: 16px;
-    }
-
-    .file-icon {
-      width: 72px;
-      height: 72px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 20px;
-      border-radius: 16px;
-      background: var(--cp-accent-soft);
-      color: var(--cp-accent);
-      font-size: 2rem;
-      font-weight: 800;
-    }
-
-    .download-card h2,
-    .card h2 {
-      margin: 0 0 8px;
-      font-size: 1.3rem;
-    }
-
-    .download-card p,
-    .card p,
-    li {
-      color: var(--cp-text-muted);
-      line-height: 1.55;
-    }
-
-    .meta {
-      display: grid;
-      gap: 8px;
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid var(--cp-border);
-      color: var(--cp-text-soft);
-      font-family: Consolas, "Courier New", Courier, monospace;
-      font-size: 0.85rem;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .card {
-      padding: 24px;
-    }
-
-    .number {
-      width: 36px;
-      height: 36px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 16px;
-      border-radius: 0.625rem;
-      background: var(--cp-accent-soft);
-      color: var(--cp-accent);
-      font-weight: 800;
-    }
-
-    .note {
-      padding: 18px 20px;
-      border: 1px solid var(--cp-border);
-      border-radius: 16px;
-      background: var(--cp-panel);
-      color: var(--cp-text-muted);
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-
-    footer {
-      color: var(--cp-text-soft);
-      font-size: 0.9rem;
-      text-align: center;
-    }
-
-    @media (max-width: 840px) {
-      .shell {
-        padding: 16px;
-      }
-
-      .hero {
-        grid-template-columns: 1fr;
-        padding: 24px;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-    }
   </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="shell">
-    <div class="app">
-      <section class="hero">
-        <div>
-          <div class="eyebrow"><span class="dot"></span>Partner resource</div>
-          <h1>Customer Cowork Estimator</h1>
-          <p class="lead">A simple partner landing page for downloading the Microsoft Customer Cowork Estimator workbook and sharing it with customers during cowork discovery, planning, and value conversations.</p>
-          <div class="actions">
-            <a class="button primary" href="./CustomerCoworkEstimator.xlsx" download>Download workbook</a>
-            <a class="button" href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fadoption.microsoft.com%2Ffiles%2Fcowork%2FCustomerCoworkEstimator.xlsx&wdOrigin=BROWSELINK" target="_blank" rel="noopener noreferrer">Preview in browser</a>
+  <main class="container">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Partner calculator</p>
+        <h1>Copilot Cowork Estimator</h1>
+        <p class="lead">
+          Estimate monthly Copilot Cowork credit consumption, budget range, and cost per user from a simple workforce profile.
+          Partners can use this directly from GitHub Pages without installing anything.
+        </p>
+        <div class="actions">
+          <button type="button" class="primary" id="calculateButton">Calculate</button>
+          <button type="button" id="resetButton">Reset assumptions</button>
+          <a class="button" href="./CustomerCoworkEstimator.xlsx" download>Download workbook</a>
+        </div>
+      </div>
+      <aside class="hero-card">
+        <h2>How the model works</h2>
+        <p>
+          Each workforce group maps to a usage band. You can adjust users, prompts per user, credits per prompt,
+          and the assumed credit price to match the customer scenario.
+        </p>
+        <ul>
+          <li>Knowledge workers: light usage</li>
+          <li>Customer facing workers: medium usage</li>
+          <li>Technical workers: heavy usage</li>
+          <li>Managers and leaders: medium usage</li>
+        </ul>
+      </aside>
+    </header>
+
+    <form id="estimatorForm" class="layout">
+      <section class="section">
+        <div class="section-heading">
+          <h2>Workforce Profile</h2>
+          <p>Enter the estimated number of users in each customer segment.</p>
+        </div>
+
+        <div class="field-grid">
+          <label>
+            <span>Knowledge Workers</span>
+            <input type="number" id="knowledge" min="0" value="1000">
+          </label>
+
+          <label>
+            <span>Customer Facing Workers</span>
+            <input type="number" id="customer" min="0" value="500">
+          </label>
+
+          <label>
+            <span>Technical Workers</span>
+            <input type="number" id="technical" min="0" value="250">
+          </label>
+
+          <label>
+            <span>Managers &amp; Leaders</span>
+            <input type="number" id="leaders" min="0" value="100">
+          </label>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <h2>Usage Assumptions</h2>
+          <p>Adjust these assumptions for the customer profile or commercial guidance you are using.</p>
+        </div>
+
+        <div class="field-grid">
+          <label>
+            <span>Light Credits / Prompt</span>
+            <input type="number" id="lightCredits" min="0" value="125">
+          </label>
+
+          <label>
+            <span>Medium Credits / Prompt</span>
+            <input type="number" id="mediumCredits" min="0" value="500">
+          </label>
+
+          <label>
+            <span>Heavy Credits / Prompt</span>
+            <input type="number" id="heavyCredits" min="0" value="2500">
+          </label>
+
+          <label>
+            <span>Prompts / User / Month</span>
+            <input type="number" id="promptsPerUser" min="0" value="20">
+          </label>
+
+          <label>
+            <span>Cost / 1,000 Credits ($)</span>
+            <input type="number" id="costPerThousand" min="0" step="0.01" value="0.01">
+          </label>
+
+          <label>
+            <span>Adoption Uplift (%)</span>
+            <input type="number" id="adoptionUplift" min="0" value="0">
+          </label>
+        </div>
+      </section>
+
+      <section class="section results" id="results" aria-live="polite">
+        <div class="section-heading">
+          <h2>Results</h2>
+          <p>Illustrative estimates only. Validate final pricing and credit rules before sharing externally.</p>
+        </div>
+
+        <div class="result-grid">
+          <article class="result-card">
+            <span>Total Users</span>
+            <strong id="totalUsers">0</strong>
+          </article>
+          <article class="result-card">
+            <span>Monthly Credits</span>
+            <strong id="monthlyCredits">0</strong>
+          </article>
+          <article class="result-card">
+            <span>Monthly Cost ($)</span>
+            <strong id="monthlyCost">0</strong>
+          </article>
+          <article class="result-card">
+            <span>Annual Cost ($)</span>
+            <strong id="annualCost">0</strong>
+          </article>
+          <article class="result-card">
+            <span>Cost / User / Month ($)</span>
+            <strong id="costPerUser">0</strong>
+          </article>
+          <article class="result-card">
+            <span>Avg Credits / User / Month</span>
+            <strong id="creditsPerUser">0</strong>
+          </article>
+        </div>
+
+        <div class="breakdown">
+          <h3>Segment breakdown</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Segment</th>
+                  <th>Users</th>
+                  <th>Usage band</th>
+                  <th>Monthly credits</th>
+                  <th>Monthly cost</th>
+                </tr>
+              </thead>
+              <tbody id="breakdownBody"></tbody>
+            </table>
           </div>
         </div>
 
-        <aside class="download-card" aria-label="Workbook details">
-          <div class="file-icon">X</div>
-          <h2>Ready for partners</h2>
-          <p>Use the workbook as a guided estimator, then download a fresh copy when you need to run a new customer scenario.</p>
-          <div class="meta">
-            <span>File: CustomerCoworkEstimator.xlsx</span>
-            <span>Format: Microsoft Excel workbook</span>
-            <span>Source: adoption.microsoft.com</span>
-          </div>
-        </aside>
+        <div class="actions compact">
+          <button type="button" id="copyButton">Copy estimate summary</button>
+          <a class="button" href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fadoption.microsoft.com%2Ffiles%2Fcowork%2FCustomerCoworkEstimator.xlsx&wdOrigin=BROWSELINK" target="_blank" rel="noopener noreferrer">Preview workbook</a>
+        </div>
       </section>
+    </form>
 
-      <section class="grid" aria-label="How to use the estimator">
-        <article class="card">
-          <div class="number">1</div>
-          <h2>Download</h2>
-          <p>Save the workbook locally before each customer conversation so your inputs and assumptions stay specific to that engagement.</p>
-        </article>
-        <article class="card">
-          <div class="number">2</div>
-          <h2>Estimate</h2>
-          <p>Capture customer cowork assumptions, compare scenarios, and use the model to frame effort, value, and next-step planning.</p>
-        </article>
-        <article class="card">
-          <div class="number">3</div>
-          <h2>Share</h2>
-          <p>Use the outputs to support partner/customer discussions, then attach the workbook or link this page for repeatable access.</p>
-        </article>
-      </section>
-
-      <div class="note">
-        This page packages a publicly available Microsoft Adoption workbook for convenient partner access. Confirm the workbook version and any customer-specific assumptions before sharing externally.
-      </div>
-
-      <footer>
-        Published with GitHub Pages for partner download access.
-      </footer>
-    </div>
+    <section class="section disclaimer">
+      <h2>Disclaimer</h2>
+      <p>
+        This tool provides illustrative estimates only and should not be treated as contractual pricing.
+        Customer-specific licensing, service terms, credit entitlements, and commercial guidance should be validated separately.
+      </p>
+    </section>
   </main>
+
+  <script src="estimator.js"></script>
 </body>
 </html>
