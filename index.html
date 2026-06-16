@@ -75,8 +75,8 @@
         <p class="eyebrow">Partner calculator</p>
         <h1>Copilot Cowork Estimator</h1>
         <p class="lead">
-          Estimate monthly Copilot Cowork credit consumption, budget range, and cost per user from a simple workforce profile.
-          Partners can use this directly from GitHub Pages without installing anything.
+          Estimate monthly Copilot Cowork credit consumption, budget range, and cost per user from workforce profile
+          and light, medium, and heavy monthly prompting assumptions.
         </p>
         <div class="actions">
           <button type="button" class="primary" id="calculateButton">Calculate</button>
@@ -85,16 +85,15 @@
         </div>
       </div>
       <aside class="hero-card">
-        <h2>How the model works</h2>
+        <h2>Assumption basis</h2>
         <p>
-          Each workforce group maps to a usage band. You can adjust users, prompts per user, credits per prompt,
-          and the assumed credit price to match the customer scenario.
+          Default prompt and credit assumptions are based on Microsoft Frontier customer usage as of 5/27/2026
+          and assume Anthropic Opus 4.8.
         </p>
         <ul>
-          <li>Knowledge workers: light usage</li>
-          <li>Customer facing workers: medium usage</li>
-          <li>Technical workers: heavy usage</li>
-          <li>Managers and leaders: medium usage</li>
+          <li>Light: narrow context, lightweight model, 0-1 tool calls, minimal runtime.</li>
+          <li>Medium: richer context, capable model, several tool calls, moderate runtime.</li>
+          <li>Heavy: broad context aggregation, high-quality model, many tool calls, sustained runtime.</li>
         </ul>
       </aside>
     </header>
@@ -102,37 +101,88 @@
     <form id="estimatorForm" class="layout">
       <section class="section">
         <div class="section-heading">
-          <h2>Workforce Profile</h2>
+          <h2>Step 1: Who will use Cowork?</h2>
           <p>Enter the estimated number of users in each customer segment.</p>
         </div>
 
         <div class="field-grid">
           <label>
-            <span>Knowledge Workers</span>
-            <input type="number" id="knowledge" min="0" value="1000">
+            <span>Corporate Knowledge Workers</span>
+            <input type="number" id="knowledge" min="0" value="200">
           </label>
 
           <label>
-            <span>Customer Facing Workers</span>
-            <input type="number" id="customer" min="0" value="500">
+            <span>Customer-Facing Knowledge Workers</span>
+            <input type="number" id="customer" min="0" value="100">
           </label>
 
           <label>
             <span>Technical Workers</span>
-            <input type="number" id="technical" min="0" value="250">
+            <input type="number" id="technical" min="0" value="10">
           </label>
 
           <label>
-            <span>Managers &amp; Leaders</span>
-            <input type="number" id="leaders" min="0" value="100">
+            <span>Managers &amp; Senior Leaders</span>
+            <input type="number" id="leaders" min="0" value="40">
           </label>
         </div>
       </section>
 
       <section class="section">
         <div class="section-heading">
-          <h2>Usage Assumptions</h2>
-          <p>Adjust these assumptions for the customer profile or commercial guidance you are using.</p>
+          <h2>Step 2: Monthly light, medium, and heavy prompts per user</h2>
+          <p>The default numbers are based on Microsoft Frontier customer usage as of 5/27/2026. Please update to suit the customer organization.</p>
+        </div>
+
+        <div class="table-wrap prompt-table-wrap">
+          <table class="prompt-table">
+            <thead>
+              <tr>
+                <th>Segment</th>
+                <th>Light <small>Narrow context, 0-1 tool calls, minimal runtime</small></th>
+                <th>Medium <small>Richer context, several tool calls, moderate runtime</small></th>
+                <th>Heavy <small>Broad context, many tool calls, sustained runtime</small></th>
+                <th>Monthly Copilot credit spend per user</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Corporate Knowledge Workers</td>
+                <td><input type="number" id="knowledgeLight" min="0" value="400" aria-label="Corporate Knowledge Workers light prompts"></td>
+                <td><input type="number" id="knowledgeMedium" min="0" value="0" aria-label="Corporate Knowledge Workers medium prompts"></td>
+                <td><input type="number" id="knowledgeHeavy" min="0" value="0" aria-label="Corporate Knowledge Workers heavy prompts"></td>
+                <td><strong id="knowledgeCreditsPerUser">0</strong></td>
+              </tr>
+              <tr>
+                <td>Customer-Facing Knowledge Workers</td>
+                <td><input type="number" id="customerLight" min="0" value="0" aria-label="Customer-Facing Knowledge Workers light prompts"></td>
+                <td><input type="number" id="customerMedium" min="0" value="0" aria-label="Customer-Facing Knowledge Workers medium prompts"></td>
+                <td><input type="number" id="customerHeavy" min="0" value="0" aria-label="Customer-Facing Knowledge Workers heavy prompts"></td>
+                <td><strong id="customerCreditsPerUser">0</strong></td>
+              </tr>
+              <tr>
+                <td>Technical Workers</td>
+                <td><input type="number" id="technicalLight" min="0" value="0" aria-label="Technical Workers light prompts"></td>
+                <td><input type="number" id="technicalMedium" min="0" value="0" aria-label="Technical Workers medium prompts"></td>
+                <td><input type="number" id="technicalHeavy" min="0" value="0" aria-label="Technical Workers heavy prompts"></td>
+                <td><strong id="technicalCreditsPerUser">0</strong></td>
+              </tr>
+              <tr>
+                <td>Managers &amp; Senior Leaders</td>
+                <td><input type="number" id="leadersLight" min="0" value="0" aria-label="Managers and Senior Leaders light prompts"></td>
+                <td><input type="number" id="leadersMedium" min="0" value="0" aria-label="Managers and Senior Leaders medium prompts"></td>
+                <td><input type="number" id="leadersHeavy" min="0" value="0" aria-label="Managers and Senior Leaders heavy prompts"></td>
+                <td><strong id="leadersCreditsPerUser">0</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <h2>Step 3: Copilot credits consumed per prompt</h2>
+          <p>The default numbers are based on Microsoft Frontier customer usage as of 5/27/2026 and assume Anthropic Opus 4.8.</p>
         </div>
 
         <div class="field-grid">
@@ -152,25 +202,15 @@
           </label>
 
           <label>
-            <span>Prompts / User / Month</span>
-            <input type="number" id="promptsPerUser" min="0" value="20">
-          </label>
-
-          <label>
-            <span>Cost / 1,000 Credits ($)</span>
-            <input type="number" id="costPerThousand" min="0" step="0.01" value="0.01">
-          </label>
-
-          <label>
-            <span>Adoption Uplift (%)</span>
-            <input type="number" id="adoptionUplift" min="0" value="0">
+            <span>Cost / Copilot Credit ($)</span>
+            <input type="number" id="costPerCredit" min="0" step="0.0001" value="0.01">
           </label>
         </div>
       </section>
 
       <section class="section results" id="results" aria-live="polite">
         <div class="section-heading">
-          <h2>Results</h2>
+          <h2>Step 4: Summary</h2>
           <p>Illustrative estimates only. Validate final pricing and credit rules before sharing externally.</p>
         </div>
 
@@ -180,11 +220,11 @@
             <strong id="totalUsers">0</strong>
           </article>
           <article class="result-card">
-            <span>Monthly Credits</span>
+            <span>Est. Monthly Copilot Credits</span>
             <strong id="monthlyCredits">0</strong>
           </article>
           <article class="result-card">
-            <span>Monthly Cost ($)</span>
+            <span>Est. Monthly Cowork Budget ($)</span>
             <strong id="monthlyCost">0</strong>
           </article>
           <article class="result-card">
@@ -192,7 +232,7 @@
             <strong id="annualCost">0</strong>
           </article>
           <article class="result-card">
-            <span>Cost / User / Month ($)</span>
+            <span>Average Price / User / Month ($)</span>
             <strong id="costPerUser">0</strong>
           </article>
           <article class="result-card">
@@ -209,7 +249,8 @@
                 <tr>
                   <th>Segment</th>
                   <th>Users</th>
-                  <th>Usage band</th>
+                  <th>Light / Medium / Heavy prompts</th>
+                  <th>Credits / user</th>
                   <th>Monthly credits</th>
                   <th>Monthly cost</th>
                 </tr>
@@ -231,6 +272,7 @@
       <p>
         This tool provides illustrative estimates only and should not be treated as contractual pricing.
         Customer-specific licensing, service terms, credit entitlements, and commercial guidance should be validated separately.
+        These estimates assume Anthropic Opus 4.8.
       </p>
     </section>
   </main>

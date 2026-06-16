@@ -194,6 +194,43 @@ input {
   color: var(--cp-text);
 }
 
+.prompt-table-wrap {
+  margin-top: 8px;
+}
+
+.prompt-table {
+  min-width: 900px;
+}
+
+.prompt-table th {
+  vertical-align: top;
+}
+
+.prompt-table th small {
+  display: block;
+  margin-top: 6px;
+  color: var(--cp-text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.3;
+  text-transform: none;
+}
+
+.prompt-table td:first-child {
+  color: var(--cp-text);
+  font-weight: 700;
+}
+
+.prompt-table input {
+  min-width: 96px;
+}
+
+.prompt-table strong {
+  color: var(--cp-accent);
+  font-family: Consolas, "Courier New", Courier, monospace;
+}
+
 .result-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

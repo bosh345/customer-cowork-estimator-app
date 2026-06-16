@@ -4,8 +4,11 @@ A lightweight GitHub Pages application that helps partners estimate:
 
 - Monthly Copilot Cowork consumption
 - Monthly credit usage
+- Light, medium, and heavy prompting by user segment
 - Annual budget requirements
 - Cost per user
+
+Default assumptions are based on Microsoft Frontier customer usage as of 5/27/2026 and assume Anthropic Opus 4.8.
 
 ## Files
 

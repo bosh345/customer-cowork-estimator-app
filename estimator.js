@@ -1,21 +1,31 @@
 const DEFAULTS = {
-  knowledge: 1000,
-  customer: 500,
-  technical: 250,
-  leaders: 100,
+  knowledge: 200,
+  customer: 100,
+  technical: 10,
+  leaders: 40,
+  knowledgeLight: 400,
+  knowledgeMedium: 0,
+  knowledgeHeavy: 0,
+  customerLight: 0,
+  customerMedium: 0,
+  customerHeavy: 0,
+  technicalLight: 0,
+  technicalMedium: 0,
+  technicalHeavy: 0,
+  leadersLight: 0,
+  leadersMedium: 0,
+  leadersHeavy: 0,
   lightCredits: 125,
   mediumCredits: 500,
   heavyCredits: 2500,
-  promptsPerUser: 20,
-  costPerThousand: 0.01,
-  adoptionUplift: 0,
+  costPerCredit: 0.01,
 };
 
 const SEGMENTS = [
-  { key: "knowledge", label: "Knowledge Workers", band: "Light", creditsKey: "lightCredits" },
-  { key: "customer", label: "Customer Facing Workers", band: "Medium", creditsKey: "mediumCredits" },
-  { key: "technical", label: "Technical Workers", band: "Heavy", creditsKey: "heavyCredits" },
-  { key: "leaders", label: "Managers & Leaders", band: "Medium", creditsKey: "mediumCredits" },
+  { key: "knowledge", label: "Corporate Knowledge Workers" },
+  { key: "customer", label: "Customer-Facing Knowledge Workers" },
+  { key: "technical", label: "Technical Workers" },
+  { key: "leaders", label: "Managers & Senior Leaders" },
 ];
 
 const numberFormat = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
@@ -46,27 +56,46 @@ function getAssumptions() {
     customer: inputValue("customer"),
     technical: inputValue("technical"),
     leaders: inputValue("leaders"),
+    knowledgeLight: inputValue("knowledgeLight"),
+    knowledgeMedium: inputValue("knowledgeMedium"),
+    knowledgeHeavy: inputValue("knowledgeHeavy"),
+    customerLight: inputValue("customerLight"),
+    customerMedium: inputValue("customerMedium"),
+    customerHeavy: inputValue("customerHeavy"),
+    technicalLight: inputValue("technicalLight"),
+    technicalMedium: inputValue("technicalMedium"),
+    technicalHeavy: inputValue("technicalHeavy"),
+    leadersLight: inputValue("leadersLight"),
+    leadersMedium: inputValue("leadersMedium"),
+    leadersHeavy: inputValue("leadersHeavy"),
     lightCredits: inputValue("lightCredits"),
     mediumCredits: inputValue("mediumCredits"),
     heavyCredits: inputValue("heavyCredits"),
-    promptsPerUser: inputValue("promptsPerUser"),
-    costPerThousand: inputValue("costPerThousand"),
-    adoptionUplift: inputValue("adoptionUplift"),
+    costPerCredit: inputValue("costPerCredit"),
   };
 }
 
 function calculate() {
   const assumptions = getAssumptions();
-  const upliftMultiplier = 1 + assumptions.adoptionUplift / 100;
   const segmentRows = SEGMENTS.map((segment) => {
     const users = assumptions[segment.key];
-    const creditsPerPrompt = assumptions[segment.creditsKey];
-    const monthlyCredits = users * assumptions.promptsPerUser * creditsPerPrompt * upliftMultiplier;
-    const monthlyCost = (monthlyCredits / 1000) * assumptions.costPerThousand;
+    const lightPrompts = assumptions[`${segment.key}Light`];
+    const mediumPrompts = assumptions[`${segment.key}Medium`];
+    const heavyPrompts = assumptions[`${segment.key}Heavy`];
+    const creditsPerUser =
+      (lightPrompts * assumptions.lightCredits) +
+      (mediumPrompts * assumptions.mediumCredits) +
+      (heavyPrompts * assumptions.heavyCredits);
+    const monthlyCredits = users * creditsPerUser;
+    const monthlyCost = monthlyCredits * assumptions.costPerCredit;
 
     return {
       ...segment,
       users,
+      lightPrompts,
+      mediumPrompts,
+      heavyPrompts,
+      creditsPerUser,
       monthlyCredits,
       monthlyCost,
     };
@@ -85,6 +114,9 @@ function calculate() {
   setText("annualCost", moneyFormat.format(annualCost));
   setText("costPerUser", decimalMoneyFormat.format(costPerUser));
   setText("creditsPerUser", creditFormat.format(creditsPerUser));
+  segmentRows.forEach((row) => {
+    setText(`${row.key}CreditsPerUser`, creditFormat.format(row.creditsPerUser));
+  });
 
   renderBreakdown(segmentRows);
   return { assumptions, totalUsers, monthlyCredits, monthlyCost, annualCost, costPerUser, creditsPerUser };
@@ -96,7 +128,8 @@ function renderBreakdown(rows) {
     <tr>
       <td>${row.label}</td>
       <td>${numberFormat.format(row.users)}</td>
-      <td>${row.band}</td>
+      <td>${numberFormat.format(row.lightPrompts)} / ${numberFormat.format(row.mediumPrompts)} / ${numberFormat.format(row.heavyPrompts)}</td>
+      <td>${creditFormat.format(row.creditsPerUser)}</td>
       <td>${creditFormat.format(row.monthlyCredits)}</td>
       <td>${moneyFormat.format(row.monthlyCost)}</td>
     </tr>
@@ -112,8 +145,9 @@ async function copySummary() {
     `Monthly cost: ${moneyFormat.format(estimate.monthlyCost)}`,
     `Annual cost: ${moneyFormat.format(estimate.annualCost)}`,
     `Cost per user/month: ${decimalMoneyFormat.format(estimate.costPerUser)}`,
-    `Prompts per user/month: ${estimate.assumptions.promptsPerUser}`,
-    `Cost per 1,000 credits: ${decimalMoneyFormat.format(estimate.assumptions.costPerThousand)}`,
+    `Light/Medium/Heavy credits per prompt: ${estimate.assumptions.lightCredits}/${estimate.assumptions.mediumCredits}/${estimate.assumptions.heavyCredits}`,
+    `Cost per Copilot Credit: ${decimalMoneyFormat.format(estimate.assumptions.costPerCredit)}`,
+    "Assumption basis: Anthropic Opus 4.8; Microsoft Frontier customer usage as of 5/27/2026.",
     "Illustrative estimate only; validate final pricing before sharing externally.",
   ].join("\n");
 
