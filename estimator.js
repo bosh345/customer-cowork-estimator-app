@@ -17,7 +17,7 @@ const DEFAULTS = {
   leadersHeavy: 0,
   lightCredits: 125,
   mediumCredits: 500,
-  heavyCredits: 2500,
+  heavyCredits: 1200,
   costPerCredit: 0.01,
 };
 
