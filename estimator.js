@@ -3,7 +3,7 @@ const DEFAULTS = {
   customer: 100,
   technical: 10,
   leaders: 40,
-  knowledgeLight: 400,
+  knowledgeLight: 0,
   knowledgeMedium: 0,
   knowledgeHeavy: 0,
   customerLight: 0,
