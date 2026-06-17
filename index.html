@@ -105,6 +105,43 @@
       </aside>
     </header>
 
+    <section class="section model-guide" aria-label="Model guidance by task weight">
+      <div class="section-heading">
+        <p class="card-kicker">Model guidance</p>
+        <h2>Choose the right model for the task weight</h2>
+        <p>Use this as a simple starting point when discussing how customers can balance capability, quality, and cost.</p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Task type</th>
+              <th>Recommended model</th>
+              <th>Partner positioning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Light tasks</td>
+              <td><strong>Sonnet 4.6</strong></td>
+              <td>Use Sonnet 4.6 for fast, lower-complexity tasks with narrower context and limited tool use.</td>
+            </tr>
+            <tr>
+              <td>Medium tasks</td>
+              <td><strong>Sonnet 4.6</strong></td>
+              <td>Medium tasks are the sweet spot for Sonnet 4.6: richer context, structured reasoning, and strong cost efficiency.</td>
+            </tr>
+            <tr>
+              <td>Heavy tasks</td>
+              <td><strong>Opus 4.8</strong></td>
+              <td>Use the full power of Opus 4.8 for broad context aggregation, deeper reasoning, many tool calls, and sustained runtime.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
     <form id="estimatorForm" class="layout">
       <section class="section">
         <div class="section-heading">
@@ -186,10 +223,12 @@
         </div>
       </section>
 
+      <p class="footnote">1. The default credit-per-prompt numbers in Step 3 are based on Microsoft Frontier customer usage as of 27/5/2026.</p>
+
       <section class="section">
         <div class="section-heading">
-          <h2>Step 3: Copilot credits consumed per prompt</h2>
-          <p>The default numbers are based on Microsoft Frontier customer usage as of 5/27/2026 and assume Anthropic Opus 4.8.</p>
+          <h2>Step 3: Copilot credits consumed per prompt<sup>1</sup></h2>
+          <p>Use these defaults as a starting point, then adjust them to suit the customer scenario and selected model mix.</p>
         </div>
 
         <div class="field-grid">

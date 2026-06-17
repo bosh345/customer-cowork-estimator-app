@@ -235,6 +235,10 @@ h3 {
   margin-top: 22px;
 }
 
+.model-guide {
+  margin-top: 22px;
+}
+
 .section {
   padding: 28px;
 }
@@ -243,6 +247,11 @@ h3 {
   margin-bottom: 20px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--cp-border);
+}
+
+sup {
+  color: var(--cp-accent);
+  font-size: 0.75em;
 }
 
 .field-grid {
@@ -311,6 +320,21 @@ input:hover {
 .prompt-table strong {
   color: var(--cp-accent);
   font-family: Consolas, "Courier New", Courier, monospace;
+}
+
+.model-guide td strong {
+  color: var(--cp-accent);
+}
+
+.footnote {
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--cp-ms-purple-line);
+  border-radius: 0.625rem;
+  background: var(--cp-ms-soft-purple);
+  color: var(--cp-text-muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
 }
 
 .result-grid {

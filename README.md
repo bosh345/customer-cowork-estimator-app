@@ -10,6 +10,12 @@ A lightweight GitHub Pages application that helps partners estimate:
 
 Default assumptions are based on Microsoft Frontier customer usage as of 5/27/2026 and assume Anthropic Opus 4.8.
 
+The app includes model guidance for task weight:
+
+- Light tasks: Sonnet 4.6
+- Medium tasks: Sonnet 4.6 as the sweet spot
+- Heavy tasks: Opus 4.8
+
 ## Files
 
 - `index.html` - partner-facing estimator page
