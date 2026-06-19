@@ -145,6 +145,46 @@
     <form id="estimatorForm" class="layout">
       <section class="section">
         <div class="section-heading">
+          <p class="card-kicker">Scenario builder</p>
+          <h2>Start from a customer conversation pattern</h2>
+          <p>Use a preset to quickly populate Step 2, then adjust the numbers for the customer. Budget and value fields are optional.</p>
+        </div>
+
+        <div class="preset-grid">
+          <button type="button" class="preset-card" data-preset="conservative">
+            <strong>Conservative</strong>
+            <span>Early pilot, limited repeat usage, mostly light prompting.</span>
+          </button>
+          <button type="button" class="preset-card" data-preset="expected">
+            <strong>Expected</strong>
+            <span>Balanced adoption across light and medium tasks with some heavy work.</span>
+          </button>
+          <button type="button" class="preset-card" data-preset="high">
+            <strong>High adoption</strong>
+            <span>Established usage, broader task coverage, and more complex workflows.</span>
+          </button>
+        </div>
+
+        <div class="field-grid planning-grid">
+          <label>
+            <span>Target Monthly Budget ($)</span>
+            <input type="number" id="targetBudget" min="0" value="0">
+          </label>
+
+          <label>
+            <span>Estimated Hours Saved / User / Month</span>
+            <input type="number" id="hoursSavedPerUser" min="0" step="0.1" value="0">
+          </label>
+
+          <label>
+            <span>Value / Hour ($)</span>
+            <input type="number" id="hourlyValue" min="0" step="1" value="75">
+          </label>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
           <h2>Step 1: Who will use Cowork?</h2>
           <p>Enter the estimated number of users in each customer segment.</p>
         </div>
@@ -169,6 +209,25 @@
             <span>Managers &amp; Senior Leaders</span>
             <input type="number" id="leaders" min="0" value="40">
           </label>
+        </div>
+
+        <div class="persona-grid">
+          <article>
+            <h3>Corporate Knowledge Workers</h3>
+            <p>Document comparison, research synthesis, meeting follow-up, policy review, and repeatable analysis.</p>
+          </article>
+          <article>
+            <h3>Customer-Facing Knowledge Workers</h3>
+            <p>Account planning, stalled pipeline review, follow-up drafting, proposal support, and customer research.</p>
+          </article>
+          <article>
+            <h3>Technical Workers</h3>
+            <p>Dependency mapping, code or file review, operational runbooks, architecture notes, and change analysis.</p>
+          </article>
+          <article>
+            <h3>Managers &amp; Senior Leaders</h3>
+            <p>Portfolio summaries, decision briefs, risk reviews, initiative tracking, and executive-ready synthesis.</p>
+          </article>
         </div>
       </section>
 
@@ -284,6 +343,22 @@
             <span>Avg Credits / User / Month</span>
             <strong id="creditsPerUser">0</strong>
           </article>
+          <article class="result-card">
+            <span>Budget Status</span>
+            <strong id="budgetStatus">Not set</strong>
+          </article>
+          <article class="result-card">
+            <span>Monthly Value Estimate ($)</span>
+            <strong id="monthlyValue">0</strong>
+          </article>
+          <article class="result-card">
+            <span>Net Monthly Value ($)</span>
+            <strong id="netMonthlyValue">0</strong>
+          </article>
+        </div>
+
+        <div class="guidance-panel" id="budgetGuidance">
+          Enter a target monthly budget to see whether the scenario is under, near, or over budget.
         </div>
 
         <div class="breakdown">
@@ -307,10 +382,29 @@
 
         <div class="actions compact">
           <button type="button" id="copyButton">Copy estimate summary</button>
+          <button type="button" id="downloadSummaryButton">Download summary</button>
+          <button type="button" id="printSummaryButton">Print / save PDF</button>
+          <button type="button" id="shareScenarioButton">Copy scenario link</button>
           <a class="button" href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fadoption.microsoft.com%2Ffiles%2Fcowork%2FCustomerCoworkEstimator.xlsx&wdOrigin=BROWSELINK" target="_blank" rel="noopener noreferrer">Preview workbook</a>
         </div>
       </section>
     </form>
+
+    <section class="section">
+      <div class="section-heading">
+        <p class="card-kicker">Customer conversation guide</p>
+        <h2>Questions to ask before sharing an estimate</h2>
+        <p>Use these prompts to make the estimate more grounded and actionable.</p>
+      </div>
+      <div class="question-grid">
+        <article>Which personas will use Cowork first, and what work will they delegate?</article>
+        <article>Which expected tasks are light, medium, or heavy based on context, tools, and runtime?</article>
+        <article>What budget owner or cost centre should own usage-based spend?</article>
+        <article>What monthly budget guardrail should the first scenario stay within?</article>
+        <article>How should the customer measure value: hours saved, cycle time, quality, or revenue impact?</article>
+        <article>Which governance controls, usage alerts, and reporting views need to be in place before scale?</article>
+      </div>
+    </section>
 
     <section class="section disclaimer">
       <h2>Disclaimer</h2>

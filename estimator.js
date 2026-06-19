@@ -19,6 +19,56 @@ const DEFAULTS = {
   mediumCredits: 500,
   heavyCredits: 1200,
   costPerCredit: 0.01,
+  targetBudget: 0,
+  hoursSavedPerUser: 0,
+  hourlyValue: 75,
+};
+
+const FIELD_IDS = Object.keys(DEFAULTS);
+
+const PRESETS = {
+  conservative: {
+    knowledgeLight: 8,
+    knowledgeMedium: 1,
+    knowledgeHeavy: 0,
+    customerLight: 6,
+    customerMedium: 1,
+    customerHeavy: 0,
+    technicalLight: 4,
+    technicalMedium: 1,
+    technicalHeavy: 0,
+    leadersLight: 4,
+    leadersMedium: 1,
+    leadersHeavy: 0,
+  },
+  expected: {
+    knowledgeLight: 16,
+    knowledgeMedium: 3,
+    knowledgeHeavy: 0,
+    customerLight: 12,
+    customerMedium: 4,
+    customerHeavy: 1,
+    technicalLight: 8,
+    technicalMedium: 4,
+    technicalHeavy: 2,
+    leadersLight: 8,
+    leadersMedium: 3,
+    leadersHeavy: 1,
+  },
+  high: {
+    knowledgeLight: 28,
+    knowledgeMedium: 8,
+    knowledgeHeavy: 1,
+    customerLight: 20,
+    customerMedium: 8,
+    customerHeavy: 2,
+    technicalLight: 12,
+    technicalMedium: 8,
+    technicalHeavy: 5,
+    leadersLight: 14,
+    leadersMedium: 8,
+    leadersHeavy: 2,
+  },
 };
 
 const SEGMENTS = [
@@ -50,29 +100,15 @@ function setText(id, value) {
   document.getElementById(id).textContent = value;
 }
 
+function setField(id, value) {
+  const field = document.getElementById(id);
+  if (field) {
+    field.value = value;
+  }
+}
+
 function getAssumptions() {
-  return {
-    knowledge: inputValue("knowledge"),
-    customer: inputValue("customer"),
-    technical: inputValue("technical"),
-    leaders: inputValue("leaders"),
-    knowledgeLight: inputValue("knowledgeLight"),
-    knowledgeMedium: inputValue("knowledgeMedium"),
-    knowledgeHeavy: inputValue("knowledgeHeavy"),
-    customerLight: inputValue("customerLight"),
-    customerMedium: inputValue("customerMedium"),
-    customerHeavy: inputValue("customerHeavy"),
-    technicalLight: inputValue("technicalLight"),
-    technicalMedium: inputValue("technicalMedium"),
-    technicalHeavy: inputValue("technicalHeavy"),
-    leadersLight: inputValue("leadersLight"),
-    leadersMedium: inputValue("leadersMedium"),
-    leadersHeavy: inputValue("leadersHeavy"),
-    lightCredits: inputValue("lightCredits"),
-    mediumCredits: inputValue("mediumCredits"),
-    heavyCredits: inputValue("heavyCredits"),
-    costPerCredit: inputValue("costPerCredit"),
-  };
+  return Object.fromEntries(FIELD_IDS.map((id) => [id, inputValue(id)]));
 }
 
 function calculate() {
@@ -107,6 +143,10 @@ function calculate() {
   const annualCost = monthlyCost * 12;
   const costPerUser = totalUsers ? monthlyCost / totalUsers : 0;
   const creditsPerUser = totalUsers ? monthlyCredits / totalUsers : 0;
+  const monthlyValue = totalUsers * assumptions.hoursSavedPerUser * assumptions.hourlyValue;
+  const netMonthlyValue = monthlyValue - monthlyCost;
+
+  const budget = getBudgetStatus(monthlyCost, assumptions.targetBudget);
 
   setText("totalUsers", numberFormat.format(totalUsers));
   setText("monthlyCredits", creditFormat.format(monthlyCredits));
@@ -114,12 +154,51 @@ function calculate() {
   setText("annualCost", moneyFormat.format(annualCost));
   setText("costPerUser", decimalMoneyFormat.format(costPerUser));
   setText("creditsPerUser", creditFormat.format(creditsPerUser));
+  setText("budgetStatus", budget.label);
+  setText("monthlyValue", moneyFormat.format(monthlyValue));
+  setText("netMonthlyValue", moneyFormat.format(netMonthlyValue));
   segmentRows.forEach((row) => {
     setText(`${row.key}CreditsPerUser`, creditFormat.format(row.creditsPerUser));
   });
 
   renderBreakdown(segmentRows);
-  return { assumptions, totalUsers, monthlyCredits, monthlyCost, annualCost, costPerUser, creditsPerUser };
+  renderBudgetGuidance(budget, monthlyCost, assumptions.targetBudget);
+  return {
+    assumptions,
+    segmentRows,
+    totalUsers,
+    monthlyCredits,
+    monthlyCost,
+    annualCost,
+    costPerUser,
+    creditsPerUser,
+    monthlyValue,
+    netMonthlyValue,
+    budget,
+  };
+}
+
+function getBudgetStatus(monthlyCost, targetBudget) {
+  if (!targetBudget) {
+    return { label: "Not set", className: "neutral", message: "Enter a target monthly budget to see whether this scenario is under, near, or over budget." };
+  }
+
+  const ratio = monthlyCost / targetBudget;
+  const variance = targetBudget - monthlyCost;
+  if (ratio <= 0.9) {
+    return { label: "Under budget", className: "under", variance, message: `This scenario is ${moneyFormat.format(Math.abs(variance))} under the target monthly budget.` };
+  }
+  if (ratio <= 1.1) {
+    return { label: "Near budget", className: "near", variance, message: `This scenario is within 10% of the target monthly budget (${moneyFormat.format(Math.abs(variance))} ${variance >= 0 ? "under" : "over"}).` };
+  }
+  return { label: "Over budget", className: "over", variance, message: `This scenario is ${moneyFormat.format(Math.abs(variance))} over the target monthly budget. Reduce prompt volume, shift heavy work to medium, or review the model mix.` };
+}
+
+function renderBudgetGuidance(budget, monthlyCost, targetBudget) {
+  const panel = document.getElementById("budgetGuidance");
+  panel.className = `guidance-panel ${budget.className}`;
+  const budgetLine = targetBudget ? ` Target: ${moneyFormat.format(targetBudget)}. Estimate: ${moneyFormat.format(monthlyCost)}.` : "";
+  panel.textContent = `${budget.message}${budgetLine}`;
 }
 
 function renderBreakdown(rows) {
@@ -136,44 +215,141 @@ function renderBreakdown(rows) {
   `).join("");
 }
 
-async function copySummary() {
+function buildSummaryText() {
   const estimate = calculate();
-  const summary = [
+  const lines = [
     "Copilot Cowork Estimator",
+    "",
     `Total users: ${numberFormat.format(estimate.totalUsers)}`,
     `Monthly credits: ${creditFormat.format(estimate.monthlyCredits)}`,
     `Monthly cost: ${moneyFormat.format(estimate.monthlyCost)}`,
     `Annual cost: ${moneyFormat.format(estimate.annualCost)}`,
     `Cost per user/month: ${decimalMoneyFormat.format(estimate.costPerUser)}`,
+    `Budget status: ${estimate.budget.label}`,
+    `Monthly value estimate: ${moneyFormat.format(estimate.monthlyValue)}`,
+    `Net monthly value: ${moneyFormat.format(estimate.netMonthlyValue)}`,
+    "",
+    "Segment breakdown:",
+    ...estimate.segmentRows.map((row) =>
+      `- ${row.label}: ${numberFormat.format(row.users)} users; ${numberFormat.format(row.lightPrompts)} / ${numberFormat.format(row.mediumPrompts)} / ${numberFormat.format(row.heavyPrompts)} light/medium/heavy prompts; ${creditFormat.format(row.monthlyCredits)} monthly credits; ${moneyFormat.format(row.monthlyCost)} monthly cost.`
+    ),
+    "",
     `Light/Medium/Heavy credits per prompt: ${estimate.assumptions.lightCredits}/${estimate.assumptions.mediumCredits}/${estimate.assumptions.heavyCredits}`,
     `Cost per Copilot Credit: ${decimalMoneyFormat.format(estimate.assumptions.costPerCredit)}`,
-    "Assumption basis: Anthropic Opus 4.8; Microsoft Frontier customer usage as of 5/27/2026.",
+    "Assumption basis: Anthropic Opus 4.8; Microsoft Frontier customer usage as of 27/5/2026.",
     "Illustrative estimate only; validate final pricing before sharing externally.",
-  ].join("\n");
+  ];
+  return lines.join("\n");
+}
 
-  await navigator.clipboard.writeText(summary);
-  const button = document.getElementById("copyButton");
+async function copySummary() {
+  await navigator.clipboard.writeText(buildSummaryText());
+  flashButton("copyButton", "Copied");
+}
+
+function downloadSummary() {
+  const blob = new Blob([buildSummaryText()], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "copilot-cowork-estimate-summary.txt";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function printSummary() {
+  const summary = buildSummaryText()
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll("\n", "<br>");
+  const popup = window.open("", "_blank", "noopener,noreferrer");
+  if (!popup) {
+    window.print();
+    return;
+  }
+  popup.document.write(`
+    <html>
+      <head>
+        <title>Copilot Cowork Estimate Summary</title>
+        <style>
+          body { font-family: "Segoe UI", Aptos, Calibri, sans-serif; margin: 32px; line-height: 1.45; }
+          h1 { margin-top: 0; }
+          .summary { white-space: normal; }
+        </style>
+      </head>
+      <body>
+        <h1>Copilot Cowork Estimate Summary</h1>
+        <div class="summary">${summary}</div>
+      </body>
+    </html>
+  `);
+  popup.document.close();
+  popup.focus();
+  popup.print();
+}
+
+async function copyScenarioLink() {
+  const params = new URLSearchParams();
+  FIELD_IDS.forEach((id) => {
+    const value = document.getElementById(id).value;
+    if (value !== String(DEFAULTS[id])) {
+      params.set(id, value);
+    }
+  });
+  const url = `${window.location.origin}${window.location.pathname}${params.toString() ? `?${params.toString()}` : ""}`;
+  await navigator.clipboard.writeText(url);
+  flashButton("shareScenarioButton", "Link copied");
+}
+
+function applyPreset(name) {
+  const preset = PRESETS[name];
+  if (!preset) {
+    return;
+  }
+  Object.entries(preset).forEach(([id, value]) => setField(id, value));
+  calculate();
+}
+
+function resetAssumptions() {
+  Object.entries(DEFAULTS).forEach(([id, value]) => setField(id, value));
+  calculate();
+}
+
+function flashButton(id, text) {
+  const button = document.getElementById(id);
   const originalText = button.textContent;
-  button.textContent = "Copied";
+  button.textContent = text;
   window.setTimeout(() => {
     button.textContent = originalText;
   }, 1600);
 }
 
-function resetAssumptions() {
-  Object.entries(DEFAULTS).forEach(([id, value]) => {
-    document.getElementById(id).value = value;
+function applyQueryParams() {
+  const params = new URLSearchParams(window.location.search);
+  FIELD_IDS.forEach((id) => {
+    if (params.has(id)) {
+      setField(id, params.get(id));
+    }
   });
-  calculate();
 }
 
 document.getElementById("calculateButton").addEventListener("click", calculate);
 document.getElementById("resetButton").addEventListener("click", resetAssumptions);
 document.getElementById("copyButton").addEventListener("click", copySummary);
+document.getElementById("downloadSummaryButton").addEventListener("click", downloadSummary);
+document.getElementById("printSummaryButton").addEventListener("click", printSummary);
+document.getElementById("shareScenarioButton").addEventListener("click", copyScenarioLink);
+document.querySelectorAll("[data-preset]").forEach((button) => {
+  button.addEventListener("click", () => applyPreset(button.dataset.preset));
+});
 document.getElementById("estimatorForm").addEventListener("input", calculate);
 document.getElementById("estimatorForm").addEventListener("submit", (event) => {
   event.preventDefault();
   calculate();
 });
 
+applyQueryParams();
 calculate();

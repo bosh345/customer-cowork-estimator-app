@@ -260,6 +260,67 @@ sup {
   gap: 16px;
 }
 
+.planning-grid {
+  margin-top: 20px;
+}
+
+.preset-grid,
+.persona-grid,
+.question-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.preset-card,
+.persona-grid article,
+.question-grid article {
+  min-height: auto;
+  align-items: start;
+  justify-content: start;
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid var(--cp-border);
+  border-radius: 16px;
+  background: var(--cp-surface);
+  color: var(--cp-text);
+  text-align: left;
+  box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
+}
+
+.preset-card:hover {
+  border-color: var(--cp-ms-purple-line);
+  background: var(--cp-ms-soft-purple);
+}
+
+.preset-card strong,
+.persona-grid h3 {
+  color: var(--cp-text);
+  font-size: 1rem;
+}
+
+.preset-card span,
+.persona-grid p,
+.question-grid article {
+  color: var(--cp-text-muted);
+  line-height: 1.45;
+}
+
+.persona-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 20px;
+}
+
+.persona-grid article {
+  background: var(--cp-ms-blue-soft);
+}
+
+.persona-grid h3,
+.persona-grid p {
+  margin-bottom: 0;
+}
+
 label {
   display: grid;
   gap: 6px;
@@ -380,6 +441,40 @@ input:hover {
   background: var(--cp-ms-yellow-soft);
 }
 
+.result-card:nth-child(7) {
+  background: var(--cp-ms-soft-purple);
+}
+
+.result-card:nth-child(8),
+.result-card:nth-child(9) {
+  background: var(--cp-ms-green-soft);
+}
+
+.guidance-panel {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid var(--cp-border);
+  border-radius: 16px;
+  background: var(--cp-surface);
+  color: var(--cp-text-muted);
+  line-height: 1.45;
+}
+
+.guidance-panel.under {
+  border-color: var(--cp-success);
+  background: var(--cp-ms-green-soft);
+}
+
+.guidance-panel.near {
+  border-color: var(--cp-warning);
+  background: var(--cp-ms-yellow-soft);
+}
+
+.guidance-panel.over {
+  border-color: var(--cp-danger);
+  background: var(--cp-ms-soft-purple);
+}
+
 .breakdown {
   margin-top: 24px;
 }
@@ -430,6 +525,22 @@ tbody tr:last-child td {
   margin-bottom: 0;
 }
 
+@media print {
+  body {
+    background: var(--cp-surface);
+  }
+
+  .actions,
+  .model-guide,
+  .disclaimer {
+    display: none;
+  }
+
+  .container {
+    padding: 0;
+  }
+}
+
 @media (max-width: 900px) {
   .container {
     padding: 16px;
@@ -445,7 +556,10 @@ tbody tr:last-child td {
   }
 
   .field-grid,
-  .result-grid {
+  .result-grid,
+  .preset-grid,
+  .persona-grid,
+  .question-grid {
     grid-template-columns: 1fr;
   }
 }

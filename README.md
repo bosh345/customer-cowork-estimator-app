@@ -7,6 +7,11 @@ A lightweight GitHub Pages application that helps partners estimate:
 - Light, medium, and heavy prompting by user segment
 - Annual budget requirements
 - Cost per user
+- Scenario presets
+- Budget guardrails
+- Optional value framing
+- Shareable scenario links
+- Copy, download, and print/save summary actions
 
 Default assumptions are based on Microsoft Frontier customer usage as of 5/27/2026 and assume Anthropic Opus 4.8.
 
