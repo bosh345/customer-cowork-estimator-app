@@ -25,6 +25,21 @@ const DEFAULTS = {
 };
 
 const FIELD_IDS = Object.keys(DEFAULTS);
+const PROMPT_FIELD_IDS = [
+  "knowledgeLight",
+  "knowledgeMedium",
+  "knowledgeHeavy",
+  "customerLight",
+  "customerMedium",
+  "customerHeavy",
+  "technicalLight",
+  "technicalMedium",
+  "technicalHeavy",
+  "leadersLight",
+  "leadersMedium",
+  "leadersHeavy",
+];
+let activePreset = null;
 
 const PRESETS = {
   conservative: {
@@ -220,11 +235,17 @@ function buildSummaryText() {
   const lines = [
     "Copilot Cowork Estimator",
     "",
+    "Usage and cost",
     `Total users: ${numberFormat.format(estimate.totalUsers)}`,
     `Monthly credits: ${creditFormat.format(estimate.monthlyCredits)}`,
     `Monthly cost: ${moneyFormat.format(estimate.monthlyCost)}`,
     `Annual cost: ${moneyFormat.format(estimate.annualCost)}`,
+    "",
+    "Per-user view",
     `Cost per user/month: ${decimalMoneyFormat.format(estimate.costPerUser)}`,
+    `Average credits per user/month: ${creditFormat.format(estimate.creditsPerUser)}`,
+    "",
+    "Budget and value",
     `Budget status: ${estimate.budget.label}`,
     `Monthly value estimate: ${moneyFormat.format(estimate.monthlyValue)}`,
     `Net monthly value: ${moneyFormat.format(estimate.netMonthlyValue)}`,
@@ -310,12 +331,42 @@ function applyPreset(name) {
     return;
   }
   Object.entries(preset).forEach(([id, value]) => setField(id, value));
+  activePreset = name;
+  updatePresetHighlight();
   calculate();
 }
 
 function resetAssumptions() {
   Object.entries(DEFAULTS).forEach(([id, value]) => setField(id, value));
+  activePreset = null;
+  updatePresetHighlight();
   calculate();
+}
+
+function presetMatchesCurrentValues(name) {
+  const preset = PRESETS[name];
+  if (!preset) {
+    return false;
+  }
+  return Object.entries(preset).every(([id, value]) => inputValue(id) === value);
+}
+
+function clearPresetIfPromptChanged(changedId) {
+  if (!activePreset || !PROMPT_FIELD_IDS.includes(changedId)) {
+    return;
+  }
+  if (!presetMatchesCurrentValues(activePreset)) {
+    activePreset = null;
+    updatePresetHighlight();
+  }
+}
+
+function updatePresetHighlight() {
+  document.querySelectorAll("[data-preset]").forEach((button) => {
+    const isActive = button.dataset.preset === activePreset;
+    button.classList.toggle("selected", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
 }
 
 function flashButton(id, text) {
@@ -345,11 +396,15 @@ document.getElementById("shareScenarioButton").addEventListener("click", copySce
 document.querySelectorAll("[data-preset]").forEach((button) => {
   button.addEventListener("click", () => applyPreset(button.dataset.preset));
 });
-document.getElementById("estimatorForm").addEventListener("input", calculate);
+document.getElementById("estimatorForm").addEventListener("input", (event) => {
+  clearPresetIfPromptChanged(event.target.id);
+  calculate();
+});
 document.getElementById("estimatorForm").addEventListener("submit", (event) => {
   event.preventDefault();
   calculate();
 });
 
 applyQueryParams();
+updatePresetHighlight();
 calculate();

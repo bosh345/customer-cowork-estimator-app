@@ -145,46 +145,6 @@
     <form id="estimatorForm" class="layout">
       <section class="section">
         <div class="section-heading">
-          <p class="card-kicker">Scenario builder</p>
-          <h2>Start from a customer conversation pattern</h2>
-          <p>Use a preset to quickly populate Step 2, then adjust the numbers for the customer. Budget and value fields are optional.</p>
-        </div>
-
-        <div class="preset-grid">
-          <button type="button" class="preset-card" data-preset="conservative">
-            <strong>Conservative</strong>
-            <span>Early pilot, limited repeat usage, mostly light prompting.</span>
-          </button>
-          <button type="button" class="preset-card" data-preset="expected">
-            <strong>Expected</strong>
-            <span>Balanced adoption across light and medium tasks with some heavy work.</span>
-          </button>
-          <button type="button" class="preset-card" data-preset="high">
-            <strong>High adoption</strong>
-            <span>Established usage, broader task coverage, and more complex workflows.</span>
-          </button>
-        </div>
-
-        <div class="field-grid planning-grid">
-          <label>
-            <span>Target Monthly Budget ($)</span>
-            <input type="number" id="targetBudget" min="0" value="0">
-          </label>
-
-          <label>
-            <span>Estimated Hours Saved / User / Month</span>
-            <input type="number" id="hoursSavedPerUser" min="0" step="0.1" value="0">
-          </label>
-
-          <label>
-            <span>Value / Hour ($)</span>
-            <input type="number" id="hourlyValue" min="0" step="1" value="75">
-          </label>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-heading">
           <h2>Step 1: Who will use Cowork?</h2>
           <p>Enter the estimated number of users in each customer segment.</p>
         </div>
@@ -234,7 +194,26 @@
       <section class="section">
         <div class="section-heading">
           <h2>Step 2: Monthly light, medium, and heavy prompts per user</h2>
-          <p>The default numbers are based on Microsoft Frontier customer usage as of 5/27/2026. Please update to suit the customer organization.</p>
+          <p>Start from a scenario pattern, tune the light / medium / heavy prompt mix, and optionally add budget and value assumptions.</p>
+        </div>
+
+        <div class="subsection">
+          <p class="card-kicker">Scenario builder</p>
+          <div class="preset-grid">
+            <button type="button" class="preset-card" data-preset="conservative" aria-pressed="false">
+              <strong>Conservative</strong>
+              <span>Early pilot, limited repeat usage, mostly light prompting.</span>
+            </button>
+            <button type="button" class="preset-card" data-preset="expected" aria-pressed="false">
+              <strong>Expected</strong>
+              <span>Balanced adoption across light and medium tasks with some heavy work.</span>
+            </button>
+            <button type="button" class="preset-card" data-preset="high" aria-pressed="false">
+              <strong>High adoption</strong>
+              <span>Established usage, broader task coverage, and more complex workflows.</span>
+            </button>
+          </div>
+          <p class="helper-text">Selected scenarios stay highlighted until you change the Step 2 prompt numbers.</p>
         </div>
 
         <div class="table-wrap prompt-table-wrap">
@@ -280,6 +259,26 @@
             </tbody>
           </table>
         </div>
+
+        <div class="subsection">
+          <p class="card-kicker">Budget and value calculator</p>
+          <div class="field-grid planning-grid">
+            <label>
+              <span>Target Monthly Budget ($)</span>
+              <input type="number" id="targetBudget" min="0" value="0">
+            </label>
+
+            <label>
+              <span>Estimated Hours Saved / User / Month</span>
+              <input type="number" id="hoursSavedPerUser" min="0" step="0.1" value="0">
+            </label>
+
+            <label>
+              <span>Value / Hour ($)</span>
+              <input type="number" id="hourlyValue" min="0" step="1" value="75">
+            </label>
+          </div>
+        </div>
       </section>
 
       <section class="section">
@@ -318,43 +317,69 @@
           <p>Illustrative estimates only. Validate final pricing and credit rules before sharing externally.</p>
         </div>
 
-        <div class="result-grid">
-          <article class="result-card">
-            <span>Total Users</span>
-            <strong id="totalUsers">0</strong>
-          </article>
-          <article class="result-card">
-            <span>Est. Monthly Copilot Credits</span>
-            <strong id="monthlyCredits">0</strong>
-          </article>
-          <article class="result-card">
-            <span>Est. Monthly Cowork Budget ($)</span>
-            <strong id="monthlyCost">0</strong>
-          </article>
-          <article class="result-card">
-            <span>Annual Cost ($)</span>
-            <strong id="annualCost">0</strong>
-          </article>
-          <article class="result-card">
-            <span>Average Price / User / Month ($)</span>
-            <strong id="costPerUser">0</strong>
-          </article>
-          <article class="result-card">
-            <span>Avg Credits / User / Month</span>
-            <strong id="creditsPerUser">0</strong>
-          </article>
-          <article class="result-card">
-            <span>Budget Status</span>
-            <strong id="budgetStatus">Not set</strong>
-          </article>
-          <article class="result-card">
-            <span>Monthly Value Estimate ($)</span>
-            <strong id="monthlyValue">0</strong>
-          </article>
-          <article class="result-card">
-            <span>Net Monthly Value ($)</span>
-            <strong id="netMonthlyValue">0</strong>
-          </article>
+        <div class="summary-layout">
+          <section class="summary-group summary-primary">
+            <div class="summary-group-heading">
+              <h3>Usage and cost</h3>
+              <p>Core commercial estimate for the scenario.</p>
+            </div>
+            <div class="result-grid">
+              <article class="result-card">
+                <span>Total Users</span>
+                <strong id="totalUsers">0</strong>
+              </article>
+              <article class="result-card">
+                <span>Monthly Copilot Credits</span>
+                <strong id="monthlyCredits">0</strong>
+              </article>
+              <article class="result-card">
+                <span>Monthly Cowork Budget</span>
+                <strong id="monthlyCost">0</strong>
+              </article>
+              <article class="result-card">
+                <span>Annual Cost</span>
+                <strong id="annualCost">0</strong>
+              </article>
+            </div>
+          </section>
+
+          <section class="summary-group">
+            <div class="summary-group-heading">
+              <h3>Per-user view</h3>
+              <p>Helpful for customer and persona-level discussion.</p>
+            </div>
+            <div class="result-grid two-up">
+              <article class="result-card">
+                <span>Average Price / User / Month</span>
+                <strong id="costPerUser">0</strong>
+              </article>
+              <article class="result-card">
+                <span>Avg Credits / User / Month</span>
+                <strong id="creditsPerUser">0</strong>
+              </article>
+            </div>
+          </section>
+
+          <section class="summary-group">
+            <div class="summary-group-heading">
+              <h3>Budget and value</h3>
+              <p>Optional guardrails for value-led planning.</p>
+            </div>
+            <div class="result-grid">
+              <article class="result-card">
+                <span>Budget Status</span>
+                <strong id="budgetStatus">Not set</strong>
+              </article>
+              <article class="result-card">
+                <span>Monthly Value Estimate</span>
+                <strong id="monthlyValue">0</strong>
+              </article>
+              <article class="result-card">
+                <span>Net Monthly Value</span>
+                <strong id="netMonthlyValue">0</strong>
+              </article>
+            </div>
+          </section>
         </div>
 
         <div class="guidance-panel" id="budgetGuidance">

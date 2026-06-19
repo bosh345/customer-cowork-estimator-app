@@ -249,6 +249,16 @@ h3 {
   border-bottom: 1px solid var(--cp-border);
 }
 
+.subsection {
+  display: grid;
+  gap: 12px;
+}
+
+.subsection + .table-wrap,
+.table-wrap + .subsection {
+  margin-top: 22px;
+}
+
 sup {
   color: var(--cp-accent);
   font-size: 0.75em;
@@ -294,6 +304,23 @@ sup {
   background: var(--cp-ms-soft-purple);
 }
 
+.preset-card.selected {
+  border-color: var(--cp-accent);
+  background: var(--cp-ms-soft-purple);
+  box-shadow: 0 0 0 2px var(--cp-accent-soft), 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
+}
+
+.preset-card.selected::after {
+  content: "Selected";
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 0.625rem;
+  background: var(--cp-accent);
+  color: var(--cp-accent-fg);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
 .preset-card strong,
 .persona-grid h3 {
   color: var(--cp-text);
@@ -319,6 +346,13 @@ sup {
 .persona-grid h3,
 .persona-grid p {
   margin-bottom: 0;
+}
+
+.helper-text {
+  margin: 0;
+  color: var(--cp-text-soft);
+  font-size: 0.92rem;
+  line-height: 1.45;
 }
 
 label {
@@ -402,6 +436,45 @@ input:hover {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
+}
+
+.summary-layout {
+  display: grid;
+  gap: 18px;
+}
+
+.summary-group {
+  padding: 18px;
+  border: 1px solid var(--cp-border);
+  border-radius: 16px;
+  background: var(--cp-surface);
+}
+
+.summary-primary {
+  background: var(--cp-ms-soft-purple);
+  border-color: var(--cp-ms-purple-line);
+}
+
+.summary-group-heading {
+  margin-bottom: 14px;
+}
+
+.summary-group-heading h3 {
+  margin-bottom: 4px;
+}
+
+.summary-group-heading p {
+  margin-bottom: 0;
+  color: var(--cp-text-muted);
+  line-height: 1.45;
+}
+
+.summary-primary .result-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.result-grid.two-up {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .result-card {
@@ -557,6 +630,8 @@ tbody tr:last-child td {
 
   .field-grid,
   .result-grid,
+  .summary-primary .result-grid,
+  .result-grid.two-up,
   .preset-grid,
   .persona-grid,
   .question-grid {
