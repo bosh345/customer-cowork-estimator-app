@@ -330,6 +330,13 @@ function applyPreset(name) {
   if (!preset) {
     return;
   }
+  if (activePreset === name) {
+    PROMPT_FIELD_IDS.forEach((id) => setField(id, DEFAULTS[id]));
+    activePreset = null;
+    updatePresetHighlight();
+    calculate();
+    return;
+  }
   Object.entries(preset).forEach(([id, value]) => setField(id, value));
   activePreset = name;
   updatePresetHighlight();
