@@ -298,7 +298,7 @@
         <div class="model-selector" aria-label="Model selection">
           <p class="card-kicker">Model selection</p>
           <div class="model-grid">
-            <button type="button" class="model-card" data-model="sonnet" aria-pressed="false">
+            <button type="button" class="model-card selected" data-model="sonnet" aria-pressed="true">
               <strong>Sonnet 4.6</strong>
               <span>Light 90 | Medium 300 | Heavy 700</span>
             </button>
@@ -306,7 +306,7 @@
               <strong>GPT-5.5</strong>
               <span>Light 110 | Medium 425 | Heavy 950</span>
             </button>
-            <button type="button" class="model-card" data-model="opus" aria-pressed="true">
+            <button type="button" class="model-card" data-model="opus" aria-pressed="false">
               <strong>Opus 4.8</strong>
               <span>Light 125 | Medium 500 | Heavy 1200</span>
             </button>
@@ -317,17 +317,17 @@
         <div class="field-grid">
           <label>
             <span>Light Credits / Prompt</span>
-            <input type="number" id="lightCredits" min="0" value="125">
+            <input type="number" id="lightCredits" min="0" value="90">
           </label>
 
           <label>
             <span>Medium Credits / Prompt</span>
-            <input type="number" id="mediumCredits" min="0" value="500">
+            <input type="number" id="mediumCredits" min="0" value="300">
           </label>
 
           <label>
             <span>Heavy Credits / Prompt</span>
-            <input type="number" id="heavyCredits" min="0" value="1200">
+            <input type="number" id="heavyCredits" min="0" value="700">
           </label>
 
           <label>

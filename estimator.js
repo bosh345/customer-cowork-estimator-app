@@ -1,5 +1,5 @@
 const DEFAULTS = {
-  model: "opus",
+  model: "sonnet",
   knowledge: 200,
   customer: 100,
   technical: 10,
@@ -16,9 +16,9 @@ const DEFAULTS = {
   leadersLight: 0,
   leadersMedium: 0,
   leadersHeavy: 0,
-  lightCredits: 125,
-  mediumCredits: 500,
-  heavyCredits: 1200,
+  lightCredits: 90,
+  mediumCredits: 300,
+  heavyCredits: 700,
   costPerCredit: 0.01,
   targetBudget: 0,
   hoursSavedPerUser: 0,
@@ -467,8 +467,11 @@ document.getElementById("shareScenarioButton").addEventListener("click", copySce
 document.querySelectorAll("[data-preset]").forEach((button) => {
   button.addEventListener("click", () => applyPreset(button.dataset.preset));
 });
-document.querySelectorAll("[data-model]").forEach((button) => {
-  button.addEventListener("click", () => applyModel(button.dataset.model));
+document.addEventListener("click", (event) => {
+  const modelButton = event.target.closest("[data-model]");
+  if (modelButton) {
+    applyModel(modelButton.dataset.model);
+  }
 });
 document.getElementById("estimatorForm").addEventListener("input", (event) => {
   clearPresetIfPromptChanged(event.target.id);
