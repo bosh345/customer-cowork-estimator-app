@@ -295,6 +295,21 @@
           <p class="footnote">1. The default credit-per-prompt numbers in Step 3 are based on Microsoft Frontier customer usage as of 27/5/2026.</p>
         </div>
 
+        <div class="model-selector" aria-label="Model selection">
+          <p class="card-kicker">Model selection</p>
+          <div class="model-grid">
+            <button type="button" class="model-card" data-model="sonnet" aria-pressed="false">
+              <strong>Sonnet 4.6</strong>
+              <span>Light 90 | Medium 300 | Heavy 700</span>
+            </button>
+            <button type="button" class="model-card" data-model="opus" aria-pressed="true">
+              <strong>Opus 4.8</strong>
+              <span>Light 125 | Medium 500 | Heavy 1200</span>
+            </button>
+          </div>
+          <p class="helper-text">Selecting a model updates the credit-per-prompt values below. You can still manually tune the numbers afterwards.</p>
+        </div>
+
         <div class="field-grid">
           <label>
             <span>Light Credits / Prompt</span>

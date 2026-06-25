@@ -275,6 +275,7 @@ sup {
 }
 
 .preset-grid,
+.model-grid,
 .persona-grid,
 .question-grid {
   display: grid;
@@ -283,6 +284,7 @@ sup {
 }
 
 .preset-card,
+.model-card,
 .persona-grid article,
 .question-grid article {
   min-height: auto;
@@ -304,13 +306,30 @@ sup {
   background: var(--cp-ms-soft-purple);
 }
 
-.preset-card.selected {
+.model-selector {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.model-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.model-card:hover {
+  border-color: var(--cp-ms-purple-line);
+  background: var(--cp-ms-soft-purple);
+}
+
+.preset-card.selected,
+.model-card.selected {
   border-color: var(--cp-accent);
   background: var(--cp-ms-soft-purple);
   box-shadow: 0 0 0 2px var(--cp-accent-soft), 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
 }
 
-.preset-card.selected::after {
+.preset-card.selected::after,
+.model-card.selected::after {
   content: "Selected";
   width: fit-content;
   padding: 4px 8px;
@@ -322,12 +341,14 @@ sup {
 }
 
 .preset-card strong,
+.model-card strong,
 .persona-grid h3 {
   color: var(--cp-text);
   font-size: 1rem;
 }
 
 .preset-card span,
+.model-card span,
 .persona-grid p,
 .question-grid article {
   color: var(--cp-text-muted);
@@ -633,6 +654,7 @@ tbody tr:last-child td {
   .summary-primary .result-grid,
   .result-grid.two-up,
   .preset-grid,
+  .model-grid,
   .persona-grid,
   .question-grid {
     grid-template-columns: 1fr;

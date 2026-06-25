@@ -1,4 +1,5 @@
 const DEFAULTS = {
+  model: "opus",
   knowledge: 200,
   customer: 100,
   technical: 10,
@@ -24,7 +25,20 @@ const DEFAULTS = {
   hourlyValue: 75,
 };
 
-const FIELD_IDS = Object.keys(DEFAULTS);
+const MODEL_CREDIT_DEFAULTS = {
+  sonnet: {
+    lightCredits: 90,
+    mediumCredits: 300,
+    heavyCredits: 700,
+  },
+  opus: {
+    lightCredits: 125,
+    mediumCredits: 500,
+    heavyCredits: 1200,
+  },
+};
+
+const FIELD_IDS = Object.keys(DEFAULTS).filter((id) => id !== "model");
 const PROMPT_FIELD_IDS = [
   "knowledgeLight",
   "knowledgeMedium",
@@ -40,6 +54,7 @@ const PROMPT_FIELD_IDS = [
   "leadersHeavy",
 ];
 let activePreset = null;
+let activeModel = DEFAULTS.model;
 
 const PRESETS = {
   conservative: {
@@ -123,7 +138,10 @@ function setField(id, value) {
 }
 
 function getAssumptions() {
-  return Object.fromEntries(FIELD_IDS.map((id) => [id, inputValue(id)]));
+  return {
+    model: activeModel,
+    ...Object.fromEntries(FIELD_IDS.map((id) => [id, inputValue(id)])),
+  };
 }
 
 function calculate() {
@@ -235,6 +253,10 @@ function buildSummaryText() {
   const lines = [
     "Copilot Cowork Estimator",
     "",
+    "Model selection",
+    `Selected model: ${getModelLabel(estimate.assumptions.model)}`,
+    `Light/Medium/Heavy credits per prompt: ${estimate.assumptions.lightCredits}/${estimate.assumptions.mediumCredits}/${estimate.assumptions.heavyCredits}`,
+    "",
     "Usage and cost",
     `Total users: ${numberFormat.format(estimate.totalUsers)}`,
     `Monthly credits: ${creditFormat.format(estimate.monthlyCredits)}`,
@@ -255,9 +277,8 @@ function buildSummaryText() {
       `- ${row.label}: ${numberFormat.format(row.users)} users; ${numberFormat.format(row.lightPrompts)} / ${numberFormat.format(row.mediumPrompts)} / ${numberFormat.format(row.heavyPrompts)} light/medium/heavy prompts; ${creditFormat.format(row.monthlyCredits)} monthly credits; ${moneyFormat.format(row.monthlyCost)} monthly cost.`
     ),
     "",
-    `Light/Medium/Heavy credits per prompt: ${estimate.assumptions.lightCredits}/${estimate.assumptions.mediumCredits}/${estimate.assumptions.heavyCredits}`,
     `Cost per Copilot Credit: ${decimalMoneyFormat.format(estimate.assumptions.costPerCredit)}`,
-    "Assumption basis: Anthropic Opus 4.8; Microsoft Frontier customer usage as of 27/5/2026.",
+    "Assumption basis: Microsoft Frontier customer usage as of 27/5/2026.",
     "Illustrative estimate only; validate final pricing before sharing externally.",
   ];
   return lines.join("\n");
@@ -314,6 +335,9 @@ function printSummary() {
 
 async function copyScenarioLink() {
   const params = new URLSearchParams();
+  if (activeModel !== DEFAULTS.model) {
+    params.set("model", activeModel);
+  }
   FIELD_IDS.forEach((id) => {
     const value = document.getElementById(id).value;
     if (value !== String(DEFAULTS[id])) {
@@ -344,10 +368,35 @@ function applyPreset(name) {
 }
 
 function resetAssumptions() {
+  activeModel = DEFAULTS.model;
   Object.entries(DEFAULTS).forEach(([id, value]) => setField(id, value));
   activePreset = null;
   updatePresetHighlight();
+  updateModelHighlight();
   calculate();
+}
+
+function applyModel(model) {
+  const defaults = MODEL_CREDIT_DEFAULTS[model];
+  if (!defaults) {
+    return;
+  }
+  activeModel = model;
+  Object.entries(defaults).forEach(([id, value]) => setField(id, value));
+  updateModelHighlight();
+  calculate();
+}
+
+function getModelLabel(model) {
+  return model === "sonnet" ? "Sonnet 4.6" : "Opus 4.8";
+}
+
+function updateModelHighlight() {
+  document.querySelectorAll("[data-model]").forEach((button) => {
+    const isActive = button.dataset.model === activeModel;
+    button.classList.toggle("selected", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
 }
 
 function presetMatchesCurrentValues(name) {
@@ -387,6 +436,10 @@ function flashButton(id, text) {
 
 function applyQueryParams() {
   const params = new URLSearchParams(window.location.search);
+  if (params.has("model") && MODEL_CREDIT_DEFAULTS[params.get("model")]) {
+    activeModel = params.get("model");
+    Object.entries(MODEL_CREDIT_DEFAULTS[activeModel]).forEach(([id, value]) => setField(id, value));
+  }
   FIELD_IDS.forEach((id) => {
     if (params.has(id)) {
       setField(id, params.get(id));
@@ -403,6 +456,9 @@ document.getElementById("shareScenarioButton").addEventListener("click", copySce
 document.querySelectorAll("[data-preset]").forEach((button) => {
   button.addEventListener("click", () => applyPreset(button.dataset.preset));
 });
+document.querySelectorAll("[data-model]").forEach((button) => {
+  button.addEventListener("click", () => applyModel(button.dataset.model));
+});
 document.getElementById("estimatorForm").addEventListener("input", (event) => {
   clearPresetIfPromptChanged(event.target.id);
   calculate();
@@ -413,5 +469,6 @@ document.getElementById("estimatorForm").addEventListener("submit", (event) => {
 });
 
 applyQueryParams();
+updateModelHighlight();
 updatePresetHighlight();
 calculate();
