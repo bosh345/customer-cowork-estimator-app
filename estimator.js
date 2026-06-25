@@ -31,6 +31,11 @@ const MODEL_CREDIT_DEFAULTS = {
     mediumCredits: 300,
     heavyCredits: 700,
   },
+  gpt55: {
+    lightCredits: 110,
+    mediumCredits: 425,
+    heavyCredits: 950,
+  },
   opus: {
     lightCredits: 125,
     mediumCredits: 500,
@@ -388,7 +393,13 @@ function applyModel(model) {
 }
 
 function getModelLabel(model) {
-  return model === "sonnet" ? "Sonnet 4.6" : "Opus 4.8";
+  if (model === "sonnet") {
+    return "Sonnet 4.6";
+  }
+  if (model === "gpt55") {
+    return "GPT-5.5";
+  }
+  return "Opus 4.8";
 }
 
 function updateModelHighlight() {
